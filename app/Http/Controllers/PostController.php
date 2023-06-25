@@ -10,6 +10,11 @@ class PostController extends Controller
     public function index()
 {
     $posts = Post::latest()->get();
+
+    foreach ($posts as $post) {
+        $post->load('user', 'comments.user');
+    }
+
     return view('posts.index', compact('posts'));
 }
 
@@ -20,11 +25,18 @@ public function create()
 
 public function store(Request $request)
 {
-    $post = new Post;
-    $post->title = $request->title;
-    $post->body = $request->body;
-    $post->save();
-    return redirect('/posts');
+    if (auth()->check()) {
+        $post = new Post();
+        $post->user_id = $request->user()->id;
+        $post->title = $request->title;
+        $post->body = $request->body;
+        $post->save();
+
+        return redirect('/posts');
+    } else {
+        // ユーザーが認証されていない場合の処理
+        return redirect('/login'); // ログインページへリダイレクトする例
+    }
 }
 public function destroy(Post $post)
 {
