@@ -11,12 +11,11 @@
             <div class="card mb-4">
                 <div class="card-header"><p style="font-size: 20px;">Title</p>{{ $post->title }}</div>
                 <div class="card-body">
-                    <p style="font-size: 20px;">Body<p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">{{ $post->body }}</p>
-                    <p style="font-size: 20px;">Post<p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">{{ $post->created_at->format('Y年m月d日 H時i分') }}　{{ $post->user->name }}</p>
+                    <p style="font-size: 20px;">Body<p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">{{ $post->body }}</br></br>{{ $post->created_at->format('Y年m月d日 H時i分') }}　By{{ $post->user->name }}</p>
 
                     <p style="font-size: 20px;">Comment</p>
                     @foreach($post->comments as $comment)
-                        <p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">{{ $comment->body }}　{{ $comment->user->name }}</p>
+                        <p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">{{ $comment->body }}　By{{ $comment->user->name }}</p>
                         <form method="POST" action="{{ route('comments.destroy', $comment) }}" class="mb-3">
                             @csrf
                             @method('DELETE')
