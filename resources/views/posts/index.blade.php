@@ -1,20 +1,22 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Posts</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <h1>Posts</h1>
+@extends('layouts.app')
 
-    @foreach ($posts as $post)
-        <div>
-            <h2>{{ $post->title }}</h2>
-            <p>{{ $post->body }}</p>
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">Posts</h1>
+            <!-- 投稿作成ページへのリンクを追加 -->
+            <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">New Post</a>
+            @foreach($posts as $post)
+            <div class="card mb-4">
+                <div class="card-header">{{ $post->title }}</div>
+                <div class="card-body">
+                    <p>{{ $post->body }}</p>
+                    <p>{{ $post->created_at->toFormattedDateString() }}</p>
+                </div>
+            </div>
+            @endforeach
         </div>
-    @endforeach
-
-    <a href="/posts/create">New Post</a>
-</body>
-</html>
+    </div>
+</div>
+@endsection

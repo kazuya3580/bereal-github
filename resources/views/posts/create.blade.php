@@ -1,24 +1,25 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Create a Post</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+@extends('layouts.app')
 
-</head>
-<body>
-    <h1>Create a New Post</h1>
-
-    <form method="POST" action="/posts">
-        @csrf
-
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
-
-        <label for="body">Body:</label>
-        <textarea id="body" name="body" required></textarea>
-
-        <button type="submit">Create</button>
-    </form>
-</body>
-</html>
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">New Post</h1>
+            <!-- 投稿一覧表示ページへのリンクを追加 -->
+            <a href="{{ route('posts.index') }}" class="btn btn-secondary mb-4">Back to Posts</a>
+            <form action="/posts" method="post">
+                @csrf
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <div class="form-group">
+                    <label for="body">Body</label>
+                    <textarea class="form-control" id="body" name="body"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
