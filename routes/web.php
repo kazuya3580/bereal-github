@@ -35,3 +35,4 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.
 Route::post('/post/{post}/like', [PostController::class, 'like'])->name('post.like');
 Route::delete('/post/{post}/like', [PostController::class, 'unlike'])->name('post.unlike');
 Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');

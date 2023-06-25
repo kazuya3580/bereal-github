@@ -14,18 +14,6 @@
                     <p>{{ $post->body }}</p>
                     <p>{{ $post->created_at->format('Y年m月d日 H時i分') }}</p>
 
-                    @foreach($post->comments as $comment)
-                        <p>{{ $comment->body }}</p>
-                        <p>Posted by {{ $comment->user->name }}</p>
-                    @endforeach
-
-            <!-- ここにコメント投稿フォームを追加 -->
-            <form method="POST" action="{{ route('comments.store', $post) }}">
-                @csrf
-                <textarea name="body" required></textarea>
-                <button type="submit">Comment</button>
-            </form>
-
                     @if ($post->isLikedBy(auth()->user()))
                         <form action="{{ route('post.unlike', $post) }}" method="post" style="display: inline;">
                             @csrf
@@ -42,6 +30,27 @@
                             </button>
                         </form>
                     @endif
+
+                    @foreach($post->comments as $comment)
+                        <p>{{ $comment->body }}</p>
+                        <p>Posted by {{ $comment->user->name }}</p>
+                        <form method="POST" action="{{ route('comments.destroy', $comment) }}" class="mb-3">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="far fa-trash-alt"></i> Delete Comment
+                            </button>
+                        </form>
+                    @endforeach
+
+<form method="POST" action="{{ route('comments.store', $post) }}">
+    @csrf
+    <div class="input-group mb-3">
+        <textarea name="body" class="form-control" rows="3" required></textarea>
+        <button type="submit" class="btn btn-primary">Comment</button>
+    </div>
+</form>
+
                 </div>
                 <form action="{{ route('posts.destroy', $post) }}" method="POST">
                 @csrf
