@@ -13,6 +13,35 @@
                 <div class="card-body">
                     <p>{{ $post->body }}</p>
                     <p>{{ $post->created_at->format('Y年m月d日 H時i分') }}</p>
+
+                    @foreach($post->comments as $comment)
+                        <p>{{ $comment->body }}</p>
+                        <p>Posted by {{ $comment->user->name }}</p>
+                    @endforeach
+
+            <!-- ここにコメント投稿フォームを追加 -->
+            <form method="POST" action="{{ route('comments.store', $post) }}">
+                @csrf
+                <textarea name="body" required></textarea>
+                <button type="submit">Comment</button>
+            </form>
+
+                    @if ($post->isLikedBy(auth()->user()))
+                        <form action="{{ route('post.unlike', $post) }}" method="post" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-link text-danger">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </form>
+                    @else
+                        <form action="{{ route('post.like', $post) }}" method="post" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-link text-muted">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </form>
+                    @endif
                 </div>
                 <form action="{{ route('posts.destroy', $post) }}" method="POST">
                 @csrf

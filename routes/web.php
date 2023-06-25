@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 
 
 /*
@@ -31,4 +32,6 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
 Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-
+Route::post('/post/{post}/like', [PostController::class, 'like'])->name('post.like');
+Route::delete('/post/{post}/like', [PostController::class, 'unlike'])->name('post.unlike');
+Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');

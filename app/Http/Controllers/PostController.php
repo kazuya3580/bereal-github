@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     public function index()
 {
-    $posts = Post::all();
-    return view('posts.index', ['posts' => $posts]);
+    $posts = Post::latest()->get();
+    return view('posts.index', compact('posts'));
 }
 
 public function create()
@@ -29,6 +30,18 @@ public function destroy(Post $post)
 {
     $post->delete();
     return redirect()->route('posts.index');
+}
+
+public function like(Post $post)
+{
+    $post->likes()->attach(auth()->user()->id);
+    return back();
+}
+
+public function unlike(Post $post)
+{
+    $post->likes()->detach(auth()->user()->id);
+    return back();
 }
 
 }
