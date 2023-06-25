@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1 class="mb-4">Posts</h1>
+            <h1 class="mb-4">BeReal</h1>
             <!-- 投稿作成ページへのリンクを追加 -->
             <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">New Post</a>
             @foreach($posts as $post)

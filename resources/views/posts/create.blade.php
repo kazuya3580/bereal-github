@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1 class="mb-4">New Post</h1>
+            <h1 class="mb-4">New BeReal</h1>
             <!-- 投稿一覧表示ページへのリンクを追加 -->
             <a href="{{ route('posts.index') }}" class="btn btn-secondary mb-4">Back to Posts</a>
             <form action="/posts" method="post">
@@ -17,7 +17,7 @@
                     <label for="body">Body</label>
                     <textarea class="form-control" id="body" name="body"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Submit</button>
             </form>
         </div>
     </div>
