@@ -25,4 +25,10 @@ public function store(Request $request)
     $post->save();
     return redirect('/posts');
 }
+public function destroy(Post $post)
+{
+    $post->delete();
+    return redirect()->route('posts.index');
+}
+
 }
