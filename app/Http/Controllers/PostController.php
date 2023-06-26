@@ -9,13 +9,17 @@ class PostController extends Controller
 {
     public function index()
 {
-    $posts = Post::latest()->get();
+    $posts = Post::latest()->with('user', 'comments.user', 'likes')->get();
 
-    foreach ($posts as $post) {
-        $post->load('user', 'comments.user');
-    }
 
     return view('posts.index', compact('posts'));
+}
+
+public function show(Post $post)
+{
+    $post->load('likes', 'comments.user');
+
+    return view('posts.show', compact('post'));
 }
 
 public function create()
