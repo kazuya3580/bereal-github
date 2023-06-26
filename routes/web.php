@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ProfileController;
 
 
 /*
@@ -36,3 +37,4 @@ Route::post('/post/{post}/like', [PostController::class, 'like'])->name('post.li
 Route::delete('/post/{post}/like', [PostController::class, 'unlike'])->name('post.unlike');
 Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
