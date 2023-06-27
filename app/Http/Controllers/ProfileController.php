@@ -9,10 +9,18 @@ use Illuminate\Http\Request;
 class ProfileController extends Controller
 {
     public function show()
-    {
-        $user = auth()->user();
-        $posts = $user->posts;
+{
+    $user = auth()->user();
 
-        return view('profile.show', compact('user', 'posts'));
+    if (!$user) {
+        // ユーザーが認証されていない場合の処理
+        // 例えばログインページへリダイレクトするなど
+        return redirect('/login');
     }
+
+    $posts = $user->posts()->latest()->get();
+
+    return view('profile.show', compact('user', 'posts'));
+}
+
 }
