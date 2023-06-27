@@ -19,8 +19,9 @@ class ProfileController extends Controller
     }
 
     $posts = $user->posts()->latest()->get();
+    $post = Post::latest()->with('user', 'comments.user', 'likes')->get();
 
-    return view('profile.show', compact('user', 'posts'));
+    return view('profile.show', compact('user', 'posts', 'post'));
 }
 
 }

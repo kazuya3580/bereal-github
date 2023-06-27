@@ -44,9 +44,15 @@ public function store(Request $request)
 }
 public function destroy(Post $post)
 {
+    // 認証されたユーザーと投稿の所有者が一致するかチェック
+    if (auth()->user()->id !== $post->user_id) {
+        return back()->with('error', 'You are not authorized to delete this post.');
+    }
+
     $post->delete();
     return redirect()->route('posts.index');
 }
+
 
 public function like(Post $post)
 {

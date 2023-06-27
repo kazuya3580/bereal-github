@@ -7,7 +7,7 @@
             <h1 class="mb-4">New BeReal</h1>
             <!-- 投稿一覧表示ページへのリンクを追加 -->
             <a href="{{ route('posts.index') }}" class="btn btn-secondary mb-4">Everyone's BeReal</a>
-            <a href="{{ route('profile.show') }}" class="btn btn-secondary mb-4" style="background-color: blue; margin-left: 20px;">Profile</a>
+            <a href="{{ route('profile.show') }}" class="btn btn-secondary mb-4" style="background-color: blue; margin-left: 100px;">Profile</a>
             <form action="/posts" method="post">
                 @csrf
                 <div class="form-group">

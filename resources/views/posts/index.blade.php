@@ -48,12 +48,16 @@
             </form>
         @endif
 
-        <form action="{{ route('posts.destroy', $post) }}" method="POST">
+        @if ($post->user_id === auth()->user()->id)
+            <form action="{{ route('posts.destroy', $post) }}" method="POST">
             @csrf
             @method('DELETE')
-            <div style="text-align: right; margin:0 10px 10px 0;">
-                <button type="submit" class="btn btn-danger">Delete Post</button>
-            </div>
-        </form>
+                <div style="text-align: right; margin:0 10px 10px 0;">
+                    <button type="submit" class="btn btn-danger">Delete Post</button>
+                </div>
+            </form>
+        @endif
     </div>
 @endforeach
+
+@endsection
