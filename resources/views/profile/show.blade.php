@@ -24,10 +24,10 @@
         </form>
 
         <!-- 自分の投稿 -->
-        <h2>My Posts</h2>
-        @if ($posts && count($posts) > 0)
-        @foreach($posts as $post)
-            <div  style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">
+        <div style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">
+            <h2>My Posts</h2>
+            @if ($posts && count($posts) > 0)
+            @foreach($posts as $post)
                 <h3>{{ $post->title }}</h3>
                 <p>{{ $post->body }}</p>
                 <p>{{ $post->created_at->format('Y年m月d日 H時i分') }}</p>
@@ -40,12 +40,30 @@
                         <button type="submit" class="btn btn-danger">Delete Post</button>
                     </div>
                 </form>
-            </div>
-        @endforeach
-        @else
-            <p>No posts found.</p>
-        @endif
+            @endforeach
+            @else
+                <p>No posts found.</p>
+            @endif
+        </div>
+
+        <!-- お気に入り一覧 -->
+        <div  style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">
+            <h2>My Favorites</h2>
+            @if ($favorites && count($favorites) > 0)
+                @foreach($favorites as $favorite)
+                    <div>
+                        <h3>{{ $favorite->title }}</h3>
+                        <p>{{ $favorite->body }}</p>
+                        <p>{{ $favorite->created_at->format('Y年m月d日 H時i分') }}</p>
+                        <!-- 他の表示項目を追加 -->
+                    </div>
+                @endforeach
+            @else
+                <p>No favorites found.</p>
+            @endif
+        </div>
     </div>
+
     <!-- 削除確認のJavaScript -->
     <script>
         document.getElementById('delete-form').addEventListener('submit', function(event) {

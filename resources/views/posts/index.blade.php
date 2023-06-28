@@ -1,12 +1,18 @@
 @extends('layouts.app')
 
+<style>
+    .text-secondary:hover {
+    color: black;
+}
+</style>
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1 class="mb-4">BeReal</h1>
+            <h1 class="mb-4">Out Put</h1>
             <!-- 投稿作成ページへのリンクを追加 -->
-            <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">New BeReal</a>
+            <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">Let's Out Put</a>
             @foreach($posts as $post)
     <div class="card mb-4">
         <div class="card-header">
@@ -27,8 +33,15 @@
                 </div>
             </form>
 
-            <a href="{{ route('posts.show', $post) }}"><p style="font-size: 20px;">Likes: {{ $post->likes->count() }}</p></a>
-            <a href="{{ route('posts.show', $post) }}"><p style="font-size: 20px;">Comments: {{ $post->comments->count() }}</p></a>
+            <div class="d-flex">
+                <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary">
+                    <p style="font-size: 20px;">Likes: {{ $post->likes->count() }}</p>
+                </a>
+                <a href="{{ route('posts.show', $post) }}" class="text-decoration-none text-secondary">
+                    <p style="font-size: 20px;">Comments: {{ $post->comments->count() }}</p>
+                </a>
+            </div>
+
         </div>
 
         <div class="d-flex">

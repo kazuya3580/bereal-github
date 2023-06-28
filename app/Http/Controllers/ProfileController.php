@@ -11,15 +11,16 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user) {
             return redirect('/login');
         }
 
         $posts = $user->posts()->latest()->get();
+        $favorites = $user->favorites()->latest()->get();
 
-        return view('profile.show', compact('user', 'posts'));
+        return view('profile.show', compact('user', 'posts', 'favorites'));
     }
 
     public function update(Request $request)
