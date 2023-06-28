@@ -66,4 +66,20 @@ public function unlike(Post $post)
     return back();
 }
 
+public function favorite(Post $post)
+{
+    $user = auth()->user();
+    $user->favorites()->attach($post->id);
+
+    return back();
+}
+
+public function unfavorite(Post $post)
+{
+    $user = auth()->user();
+    $user->favorites()->detach($post->id);
+
+    return back();
+}
+
 }

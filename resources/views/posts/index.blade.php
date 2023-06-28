@@ -31,22 +31,40 @@
             <a href="{{ route('posts.show', $post) }}"><p style="font-size: 20px;">Comments: {{ $post->comments->count() }}</p></a>
         </div>
 
-        @if ($post->isLikedBy(auth()->user()))
-            <form action="{{ route('post.unlike', $post) }}" method="post" style="display: inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-link text-danger">
-                    <i class="fas fa-heart"></i>
-                </button>
-            </form>
+        <div class="d-flex">
+    @if ($post->isLikedBy(auth()->user()))
+        <form action="{{ route('post.unlike', $post) }}" method="post" style="display: inline;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-link text-danger">
+                <i class="fas fa-heart"></i>
+            </button>
+        </form>
+    @else
+        <form action="{{ route('post.like', $post) }}" method="post" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn btn-link text-muted">
+                <i class="far fa-heart"></i>
+            </button>
+        </form>
+    @endif
+
+    <form method="POST" action="{{ $post->isFavoritedBy(auth()->user()) ? route('posts.unfavorite', $post) : route('posts.favorite', $post) }}" style="display: inline;">
+        @csrf
+        @if ($post->isFavoritedBy(auth()->user()))
+            @method('DELETE')
+            <button type="submit" class="btn btn-link text-muted" style="color: black;">
+                <i class="fas fa-bookmark"></i> <!-- お気に入りされている場合のアイコン -->
+            </button>
         @else
-            <form action="{{ route('post.like', $post) }}" method="post" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn btn-link text-muted">
-                    <i class="far fa-heart"></i>
-                </button>
-            </form>
+            <button type="submit" class="btn btn-link text-muted" style="color: white;">
+                <i class="far fa-bookmark"></i> <!-- お気に入りされていない場合のアイコン -->
+            </button>
         @endif
+    </form>
+</div>
+
+
 
         @if ($post->user_id === auth()->user()->id)
             <form action="{{ route('posts.destroy', $post) }}" method="POST">

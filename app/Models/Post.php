@@ -31,4 +31,15 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function favoritedBy(): BelongsToMany
+{
+    return $this->belongsToMany(User::class, 'favorites', 'post_id', 'user_id')->withTimestamps();
+}
+
+public function isFavoritedBy(User $user): bool
+{
+    return $this->favoritedBy()->where('user_id', $user->id)->exists();
+}
+
 }

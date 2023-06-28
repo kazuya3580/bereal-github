@@ -2,10 +2,28 @@
 
 @section('content')
     <div class="container">
-        <h1>Profile</h1>
-        <p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;"><strong>Name:</strong> {{ $user->name }}</p>
-        <p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;"><strong>Email:</strong> {{ $user->email }}</p>
+        <form method="POST" action="{{ route('profile.update') }}">
+            @csrf
+            @method('PUT')
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
 
+        <!-- 退会処理 -->
+        <form  id="delete-form" action="{{ route('profile.destroy') }}" method="POST" style="margin-top: 10px;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+        </form>
+
+        <!-- 自分の投稿 -->
         <h2>My Posts</h2>
         @if ($posts && count($posts) > 0)
         @foreach($posts as $post)
@@ -16,16 +34,26 @@
                 <a href="{{ route('posts.show', $post) }}"><p style="font-size: 20px;">Likes: {{ $post->likes->count() }}</p></a>
                 <a href="{{ route('posts.show', $post) }}"><p style="font-size: 20px;">Comments: {{ $post->comments->count() }}</p></a>
                 <form action="{{ route('posts.destroy', $post) }}" method="POST">
-            @csrf
-            @method('DELETE')
-                <div style="text-align: right; margin:0 10px 10px 0;">
-                    <button type="submit" class="btn btn-danger">Delete Post</button>
-                </div>
-            </form>
+                @csrf
+                @method('DELETE')
+                    <div style="text-align: right; margin:0 10px 10px 0;">
+                        <button type="submit" class="btn btn-danger">Delete Post</button>
+                    </div>
+                </form>
             </div>
         @endforeach
         @else
             <p>No posts found.</p>
         @endif
     </div>
+    <!-- 削除確認のJavaScript -->
+    <script>
+        document.getElementById('delete-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // フォームのデフォルトの送信をキャンセル
+
+            if (confirm('本当に削除しますか？')) {
+                this.submit(); // 確認ダイアログで「OK」が選択された場合はフォームを送信
+            }
+        });
+    </script>
 @endsection

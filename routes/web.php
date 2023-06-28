@@ -36,6 +36,11 @@ Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 Route::post('/post/{post}/like', [PostController::class, 'like'])->name('post.like');
 Route::delete('/post/{post}/like', [PostController::class, 'unlike'])->name('post.unlike');
+Route::post('/posts/{post}/favorite', [PostController::class, 'favorite'])->name('posts.favorite');
+Route::delete('/posts/{post}/unfavorite', [PostController::class, 'unfavorite'])->name('posts.unfavorite');
 Route::post('posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+// プロフィール
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
