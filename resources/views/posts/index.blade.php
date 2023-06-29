@@ -1,11 +1,5 @@
 @extends('layouts.app')
 
-<style>
-    .text-secondary:hover {
-    color: black;
-}
-</style>
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -37,8 +31,11 @@
                 <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary">
                     <p style="font-size: 20px;">Likes: {{ $post->likes->count() }}</p>
                 </a>
-                <a href="{{ route('posts.show', $post) }}" class="text-decoration-none text-secondary">
+                <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary">
                     <p style="font-size: 20px;">Comments: {{ $post->comments->count() }}</p>
+                </a>
+                <a href="{{ route('posts.show', $post) }}" class="text-decoration-none text-secondary">
+                    <p style="font-size: 20px;">Favorites: {{ $post->favorites->count() }}</p>
                 </a>
             </div>
 
@@ -76,19 +73,34 @@
         @endif
     </form>
 </div>
-
-
-
+    <div>
         @if ($post->user_id === auth()->user()->id)
-            <form action="{{ route('posts.destroy', $post) }}" method="POST">
-            @csrf
-            @method('DELETE')
+            <div style="text-align: right; margin:0 10px 10px 0;">
+            <a href="{{ route('posts.edit', $post) }}" class="btn btn-primary">Edit Post</a>
+    </div>
+        @endif
+    <div>
+        @if ($post->user_id === auth()->user()->id)
+            <form action="{{ route('posts.destroy', $post) }}" method="POST" id="delete-form">
+                @csrf
+                @method('DELETE')
                 <div style="text-align: right; margin:0 10px 10px 0;">
-                    <button type="submit" class="btn btn-danger">Delete Post</button>
+                    <button type="submit" class="btn btn-danger" onclick="confirmDelete(event)">Delete Post</button>
                 </div>
             </form>
         @endif
     </div>
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault(); // フォームのデフォルトの送信をキャンセル
+
+            if (confirm('本当に削除しますか？')) {
+                document.getElementById('delete-form').submit(); // 確認ダイアログで「OK」が選択された場合はフォームを送信
+            }
+        }
+    </script>
+</div>
+</div>
 @endforeach
 
 @endsection

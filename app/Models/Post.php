@@ -12,6 +12,8 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['title', 'body'];
+
     public function likes(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id')->withTimestamps();
@@ -32,14 +34,14 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function favoritedBy(): BelongsToMany
-{
-    return $this->belongsToMany(User::class, 'favorites', 'post_id', 'user_id')->withTimestamps();
-}
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'post_id', 'user_id')->withTimestamps();
+    }
 
-public function isFavoritedBy(User $user): bool
-{
-    return $this->favoritedBy()->where('user_id', $user->id)->exists();
-}
+    public function isFavoritedBy(User $user): bool
+    {
+        return $this->favorites()->where('user_id', $user->id)->exists();
+    }
 
 }

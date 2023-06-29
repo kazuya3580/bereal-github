@@ -9,8 +9,7 @@ class PostController extends Controller
 {
     public function index()
 {
-    $posts = Post::latest()->with('user', 'comments.user', 'likes')->get();
-
+    $posts = Post::latest()->with('user', 'comments.user', 'likes', 'favorites')->get();
 
     return view('posts.index', compact('posts'));
 }
@@ -42,6 +41,22 @@ public function store(Request $request)
         return redirect('/login'); // ログインページへリダイレクトする例
     }
 }
+
+public function edit(Post $post)
+{
+    return view('posts.edit', compact('post'));
+}
+
+public function update(Request $request, Post $post)
+{
+    $post->update([
+        'title' => $request->input('title'),
+        'body' => $request->input('body'),
+    ]);
+
+    return redirect()->route('posts.index', $post)->with('success', 'Post updated successfully.');
+}
+
 public function destroy(Post $post)
 {
     // 認証されたユーザーと投稿の所有者が一致するかチェック

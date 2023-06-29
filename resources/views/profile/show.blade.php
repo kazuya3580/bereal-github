@@ -57,7 +57,7 @@
                         <h3>{{ $favorite->title }}</h3>
                         <p>{{ $favorite->body }}</p>
                         <p>{{ $favorite->created_at->format('Y年m月d日 H時i分') }}</p>
-                        <!-- 他の表示項目を追加 -->
+                    <!-- 他の表示項目を追加 -->
                         <form method="POST" action="{{ route('posts.unfavorite', $favorite) }}" style="display: inline;">
                             @csrf
                             @method('DELETE')
