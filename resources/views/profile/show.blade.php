@@ -2,6 +2,8 @@
 
 @section('content')
     <div class="container">
+        <!-- 投稿作成ページへのリンクを追加 -->
+        <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">Let's Out Put</a>
         <form method="POST" action="{{ route('profile.update') }}">
             @csrf
             @method('PUT')
@@ -47,15 +49,22 @@
         </div>
 
         <!-- お気に入り一覧 -->
-        <div  style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">
+        <div>
             <h2>My Favorites</h2>
             @if ($favorites && count($favorites) > 0)
                 @foreach($favorites as $favorite)
-                    <div>
+                    <div style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">
                         <h3>{{ $favorite->title }}</h3>
                         <p>{{ $favorite->body }}</p>
                         <p>{{ $favorite->created_at->format('Y年m月d日 H時i分') }}</p>
                         <!-- 他の表示項目を追加 -->
+                        <form method="POST" action="{{ route('posts.unfavorite', $favorite) }}" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-link text-muted" style="color: black;">
+                                <i class="fas fa-bookmark"></i> <!-- お気に入り解除ボタンのアイコン -->
+                            </button>
+                        </form>
                     </div>
                 @endforeach
             @else

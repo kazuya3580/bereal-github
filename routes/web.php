@@ -44,3 +44,4 @@ Route::delete('comments/{comment}', [CommentController::class, 'destroy'])->name
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
+

@@ -61,4 +61,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Post::class, 'favorites', 'user_id', 'post_id')->withTimestamps();
     }
 
+    public function isFavoritedBy(User $user): bool
+{
+    return $this->favoritedBy()->where('user_id', $user->id)->exists();
+}
+
 }

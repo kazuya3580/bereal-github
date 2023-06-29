@@ -19,8 +19,9 @@ class ProfileController extends Controller
 
         $posts = $user->posts()->latest()->get();
         $favorites = $user->favorites()->latest()->get();
+        $post = new Post(); // 新しい Post インスタンスを作成
 
-        return view('profile.show', compact('user', 'posts', 'favorites'));
+        return view('profile.show', compact('user', 'posts', 'favorites', 'post'));
     }
 
     public function update(Request $request)
@@ -54,4 +55,13 @@ class ProfileController extends Controller
 
         return redirect('/')->with('success', 'Your account has been deleted.');
     }
+
+public function unfavorite(Post $post)
+{
+    $user = auth()->user();
+    $user->favorites()->detach($post);
+
+    return back();
+}
+
 }
