@@ -26,7 +26,10 @@ class PostController extends Controller
             if ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('title', 'LIKE', '%' . $search . '%')
-                        ->orWhere('body', 'LIKE', '%' . $search . '%');
+                        ->orWhere('body', 'LIKE', '%' . $search . '%')
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'LIKE', '%' . $search . '%');
+                        });
                 });
             }
         });
@@ -37,7 +40,7 @@ class PostController extends Controller
 
         // 検索結果に関係のない投稿を除外する
         $posts = $posts->filter(function ($post) use ($search) {
-            return stripos($post->title, $search) !== false || stripos($post->body, $search) !== false;
+            return stripos($post->title, $search) !== false || stripos($post->body, $search) !== false || stripos($post->user->name, $search) !== false;
         });
 
         return view('posts.index', compact('posts', 'search'));
