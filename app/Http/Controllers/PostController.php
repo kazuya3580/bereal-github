@@ -8,24 +8,41 @@ use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
-    public function index()
-{
-    $currentUser = auth()->user();
+    public function index(Request $request)
+    {
+        $currentUser = auth()->user();
+        $search = $request->input('search');
 
-$posts = Post::where('visibility', 'public') // 公開の投稿のみ取得
-    ->orWhere(function ($query) use ($currentUser) {
-        if ($currentUser) {
-            $query->where('user_id', $currentUser->id) // 自分の投稿も取得
-                ->where('visibility', 'private'); // 非公開の投稿のみ取得
-        }
-    })
-    ->latest()
-    ->with('user', 'comments.user', 'likes', 'favorites')
-    ->get();
+        $query = Post::where(function ($query) use ($currentUser, $search) {
+            $query->where('visibility', 'public'); // 公開の投稿のみ取得
 
-return view('posts.index', compact('posts'));
+            if ($currentUser) {
+                $query->orWhere(function ($query) use ($currentUser, $search) {
+                    $query->where('user_id', $currentUser->id) // 自分の投稿も取得
+                        ->where('visibility', 'private'); // 非公開の投稿のみ取得
+                });
+            }
 
-}
+            if ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('title', 'LIKE', '%' . $search . '%')
+                        ->orWhere('body', 'LIKE', '%' . $search . '%');
+                });
+            }
+        });
+
+        $posts = $query->latest()
+            ->with('user', 'comments.user', 'likes', 'favorites')
+            ->get();
+
+        // 検索結果に関係のない投稿を除外する
+        $posts = $posts->filter(function ($post) use ($search) {
+            return stripos($post->title, $search) !== false || stripos($post->body, $search) !== false;
+        });
+
+        return view('posts.index', compact('posts', 'search'));
+    }
+
 
 public function show(Post $post)
 {
