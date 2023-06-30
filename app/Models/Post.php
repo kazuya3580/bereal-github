@@ -12,7 +12,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'body'];
+    protected $fillable = ['title', 'body', 'visibility'];
 
     public function likes(): BelongsToMany
     {

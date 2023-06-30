@@ -13,6 +13,13 @@
             <label for="body" class="form-label"  style="font-size: 30px;">Body</label>
             <textarea class="form-control" id="body" name="body" rows="4" required>{{ $post->body }}</textarea>
         </div>
+        <div class="card-body">
+            <label for="visibility" class="form-label" style="font-size: 30px;">Visibility</label>
+            <select class="form-control" id="visibility" name="visibility">
+                <option value="public" {{ $post->visibility === 'public' ? 'selected' : '' }}>Public</option>
+                <option value="private" {{ $post->visibility === 'private' ? 'selected' : '' }}>Private</option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary"  style="margin:20px; 0 0 0;">Update Post</button>
     </form>
 </div>

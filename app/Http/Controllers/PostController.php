@@ -4,14 +4,27 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
     public function index()
 {
-    $posts = Post::latest()->with('user', 'comments.user', 'likes', 'favorites')->get();
+    $currentUser = auth()->user();
 
-    return view('posts.index', compact('posts'));
+$posts = Post::where('visibility', 'public') // 公開の投稿のみ取得
+    ->orWhere(function ($query) use ($currentUser) {
+        if ($currentUser) {
+            $query->where('user_id', $currentUser->id) // 自分の投稿も取得
+                ->where('visibility', 'private'); // 非公開の投稿のみ取得
+        }
+    })
+    ->latest()
+    ->with('user', 'comments.user', 'likes', 'favorites')
+    ->get();
+
+return view('posts.index', compact('posts'));
+
 }
 
 public function show(Post $post)
@@ -28,19 +41,26 @@ public function create()
 
 public function store(Request $request)
 {
-    if (auth()->check()) {
-        $post = new Post();
-        $post->user_id = $request->user()->id;
-        $post->title = $request->title;
-        $post->body = $request->body;
-        $post->save();
+    // バリデーションなどの処理を追加する場合はここで行います
 
-        return redirect('/posts');
-    } else {
-        // ユーザーが認証されていない場合の処理
-        return redirect('/login'); // ログインページへリダイレクトする例
-    }
+    // フォームから送信されたデータを取得
+    $title = $request->input('title');
+    $body = $request->input('body');
+    $visibility = $request->input('visibility');
+
+    // 投稿を作成
+    $post = new Post();
+    $post->user_id = auth()->user()->id;
+    $post->title = $title;
+    $post->body = $body;
+    $post->visibility = $visibility;
+    $post->save();
+
+    // 投稿が作成されたらリダイレクトするなどの処理を追加します
+
+    return redirect()->route('posts.index');
 }
+
 
 public function edit(Post $post)
 {
@@ -49,12 +69,14 @@ public function edit(Post $post)
 
 public function update(Request $request, Post $post)
 {
+
     $post->update([
         'title' => $request->input('title'),
         'body' => $request->input('body'),
+        'visibility' => $request->input('visibility'),
     ]);
 
-    return redirect()->route('posts.index', $post)->with('success', 'Post updated successfully.');
+    return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
 }
 
 public function destroy(Post $post)

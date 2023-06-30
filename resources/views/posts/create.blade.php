@@ -16,6 +16,13 @@
                     <label for="body">Body</label>
                     <textarea class="form-control" id="body" name="body"></textarea>
                 </div>
+                <div class="form-group">
+                    <label for="visibility">Visibility</label>
+                    <select class="form-control" id="visibility" name="visibility">
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 30px;">Out Put</button>
             </form>
             <!-- 投稿一覧表示ページへのリンクを追加 -->
