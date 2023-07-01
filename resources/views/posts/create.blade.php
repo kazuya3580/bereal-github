@@ -16,11 +16,21 @@
                     <label for="body">Body</label>
                     <textarea class="form-control" id="body" name="body"></textarea>
                 </div>
+                <!-- 公開非公開 -->
                 <div class="form-group">
                     <label for="visibility">Visibility</label>
                     <select class="form-control" id="visibility" name="visibility">
                         <option value="public">Public</option>
                         <option value="private">Private</option>
+                    </select>
+                </div>
+                <!-- カテゴリー -->
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select class="form-control" id="category" name="category">
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 30px;">Out Put</button>

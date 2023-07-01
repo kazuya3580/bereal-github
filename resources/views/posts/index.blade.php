@@ -94,6 +94,13 @@
                 @endif
             </form>
         </div>
+        <!-- カテゴリー表示 -->
+        @if ($post->category)
+            <p class="mb-0">Category: {{ $post->category->name }}</p>
+        @else
+            <p class="mb-0">No Category</p>
+        @endif
+
         <!-- 自分の投稿のみ編集 -->
         <div>
             @if ($post->user_id === auth()->user()->id)

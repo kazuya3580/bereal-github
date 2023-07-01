@@ -3,45 +3,46 @@
 namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
     public function index(Request $request)
-{
-    $currentUser = auth()->user();
-    $keywords = explode(' ', $request->input('search'));
-    $search = $request->input('search');
+    {
+        $currentUser = auth()->user();
+        $keywords = explode(' ', $request->input('search'));
+        $search = $request->input('search');
 
-    $query = Post::query();
+        $query = Post::query();
 
-    $query->where(function ($query) use ($currentUser, $keywords) {
-        $query->where('visibility', 'public')
-            ->orWhere(function ($query) use ($currentUser) {
-                $query->where('user_id', $currentUser->id)
-                    ->where('visibility', 'private');
-            });
-    });
+        $query->where(function ($query) use ($currentUser, $keywords) {
+            $query->where('visibility', 'public')
+                ->orWhere(function ($query) use ($currentUser) {
+                    $query->where('user_id', $currentUser->id)
+                        ->where('visibility', 'private');
+                });
+        });
 
-    $query->where(function ($query) use ($keywords) {
-        foreach ($keywords as $keyword) {
-            $query->where(function ($query) use ($keyword) {
-                $query->where('title', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('body', 'LIKE', '%' . $keyword . '%')
-                    ->orWhereHas('user', function ($query) use ($keyword) {
-                        $query->where('name', 'LIKE', '%' . $keyword . '%');
-                    });
-            });
-        }
-    });
+        $query->where(function ($query) use ($keywords) {
+            foreach ($keywords as $keyword) {
+                $query->where(function ($query) use ($keyword) {
+                    $query->where('title', 'LIKE', '%' . $keyword . '%')
+                        ->orWhere('body', 'LIKE', '%' . $keyword . '%')
+                        ->orWhereHas('user', function ($query) use ($keyword) {
+                            $query->where('name', 'LIKE', '%' . $keyword . '%');
+                        });
+                });
+            }
+        });
 
-    $posts = $query->latest()
-        ->with('user', 'comments.user', 'likes', 'favorites')
-        ->get();
+        $posts = $query->latest()
+            ->with('user', 'comments.user', 'likes', 'favorites', 'category') // カテゴリーをロードする
+            ->get();
 
-    return view('posts.index', compact('posts', 'search'));
-}
+        return view('posts.index', compact('posts', 'search'));
+    }
 
 
 
@@ -54,7 +55,9 @@ public function show(Post $post)
 
 public function create()
 {
-    return view('posts.create');
+    $categories = Category::all(); // カテゴリーの一覧を取得
+
+    return view('posts.create', compact('categories')); // カテゴリー一覧をビューに渡す
 }
 
 public function store(Request $request)
@@ -65,6 +68,11 @@ public function store(Request $request)
     $title = $request->input('title');
     $body = $request->input('body');
     $visibility = $request->input('visibility');
+    $category_id = $request->input('category');
+    $category_name = $request->input('category');
+
+    // カテゴリー情報を取得
+    $category = Category::find($category_id);
 
     // 投稿を作成
     $post = new Post();
@@ -72,13 +80,19 @@ public function store(Request $request)
     $post->title = $title;
     $post->body = $body;
     $post->visibility = $visibility;
+
+    // カテゴリーが存在する場合のみカテゴリーIDを保存
+    if ($category) {
+        $post->category_id = $category_id;
+        $post->category_name = $category->name;
+    }
+
     $post->save();
 
     // 投稿が作成されたらリダイレクトするなどの処理を追加します
 
     return redirect()->route('posts.index');
 }
-
 
 public function edit(Post $post)
 {
