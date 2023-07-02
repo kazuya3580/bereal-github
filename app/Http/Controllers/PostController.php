@@ -14,6 +14,7 @@ class PostController extends Controller
         $currentUser = auth()->user();
         $keywords = explode(' ', $request->input('search'));
         $search = $request->input('search');
+        $categories = Category::search($search)->get();
 
         $query = Post::query();
 
@@ -37,11 +38,24 @@ class PostController extends Controller
             }
         });
 
+        // $posts 変数を初期化
+        $posts = null;
+
+        // 選択されたカテゴリーがある場合のみ絞り込みを行う
+        if ($request->has('category')) {
+            $selectedCategory = $request->input('category');
+            $posts = $query->whereHas('category', function ($query) use ($selectedCategory) {
+                $query->where('name', $selectedCategory);
+            })->get();
+        } else {
+            $posts = $query->get();
+        }
+
         $posts = $query->latest()
             ->with('user', 'comments.user', 'likes', 'favorites', 'category') // カテゴリーをロードする
             ->get();
 
-        return view('posts.index', compact('posts', 'search'));
+        return view('posts.index', compact('posts', 'search', 'categories'));
     }
 
 

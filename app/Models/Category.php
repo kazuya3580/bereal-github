@@ -9,8 +9,16 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+
     public function posts()
     {
         return $this->hasMany(Post::class, 'category_name');
     }
+
+    public function scopeSearch($query, $keyword)
+    {
+        return $query->where('name', 'like', '%' . $keyword . '%');
+    }
+
 }
