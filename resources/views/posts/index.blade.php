@@ -19,10 +19,14 @@
             @endif
 
             <!-- カテゴリー検索 -->
-            <div class="category-list-container">
+            <div class="category-list-container" style="margin-bottom: 40px;">
                 @if ($categories->count() > 0)
                     <ul class="list-group">
-                        <p class="font-weight-bold">Category</p>
+                        <p class="font-weight-bold"></p>
+                        <li class="list-group-item">
+                        <a href="{{ route('posts.index') }}" style="color: gray;" class="text-decoration-none category-link" onmouseover="this.style.color='black'" onmouseout="this.style.color='gray'">
+                            すべて
+                        </a>
                         @foreach ($categories as $category)
                             <li class="list-group-item">
                             <a href="{{ route('posts.index', ['search' => $search, 'category' => $category->name]) }}" style="color: gray;" class="text-decoration-none category-link" onmouseover="this.style.color='black'" onmouseout="this.style.color='gray'">
