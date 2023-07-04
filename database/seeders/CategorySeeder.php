@@ -16,8 +16,8 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             ['name' => '勉強'],
-            ['name' => '恋愛'],
-            ['name' => '筋トレ'],
+            ['name' => '運動'],
+            ['name' => '睡眠'],
             ['name' => '健康'],
             ['name' => '食事'],
             // 他のカテゴリーデータを追加する場合はここに追記

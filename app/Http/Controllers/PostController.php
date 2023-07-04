@@ -80,7 +80,16 @@ public function create()
 
 public function store(Request $request)
 {
-    // バリデーションなどの処理を追加する場合はここで行います
+    // バリデーション
+    $validatedData = $request->validate([
+        'title' => 'required',
+        'body' => 'required',
+        'visibility' => 'in:public,private',
+    ]);
+
+    $title = $validatedData['title'];
+    $body = $validatedData['body'];
+    $visibility = $validatedData['visibility'];
 
     // フォームから送信されたデータを取得
     $title = $request->input('title');
@@ -114,20 +123,22 @@ public function store(Request $request)
 
 public function edit(Post $post)
 {
-    return view('posts.edit', compact('post'));
+    $categories = Category::all();
+    return view('posts.edit', compact('post', 'categories'));
 }
 
 public function update(Request $request, Post $post)
 {
-
     $post->update([
         'title' => $request->input('title'),
         'body' => $request->input('body'),
         'visibility' => $request->input('visibility'),
+        'category_id' => $request->input('category'), // カテゴリーの更新
     ]);
 
     return redirect()->route('posts.index')->with('success', 'Post updated successfully.');
 }
+
 
 public function destroy(Post $post)
 {

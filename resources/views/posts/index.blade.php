@@ -4,9 +4,9 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1 class="mb-4">Out Put</h1>
+            <h1 class="mb-4">OutPut</h1>
             <!-- 投稿作成ページへのリンクを追加 -->
-            <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">Let's Out Put</a>
+            <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">OutPut</a>
             <!-- 検索機能 -->
             <form method="GET" action="{{ route('posts.index') }}" class="mb-4">
                 <div class="input-group">
@@ -45,16 +45,16 @@
                 <div class="card mb-4">
                     <div class="card-header">
                         <div>
-                            <p style="font-size: 30px; font-weight: bolder;">Title</p>
+                            <p style="font-size: 30px; font-weight: bolder;"></p>
                             {{ $post->title }}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="text-align: right; margin-right: 10px; margin-top: -30px;">
                             <label for="visibility"></label>
                             <small style="font-size: 20px;">
                                 @if ($post->visibility === 'public')
-                                    Public
+                                    公開
                                 @elseif ($post->visibility === 'private')
-                                    Private
+                                    非公開
                                 @endif
                             </small>
                         </div>
@@ -62,27 +62,19 @@
                     <div class="card-body">
                         <p style="font-size: 20px;"></p>
                         <p style="border-bottom: 1px solid #ccc;padding: 10px;margin-bottom: 10px;">{{ $post->body }}</br></br>{{ $post->created_at->format('Y年m月d日 H時i分') }} By{{ $post->user->name }}</p>
-                        <!-- コメント -->
-                        <form method="POST" action="{{ route('comments.store', $post) }}">
-                            @csrf
-                            <div class="input-group mb-3">
-                                <textarea name="body" class="form-control" rows="3" required></textarea>
-                                <button type="submit" class="btn btn-primary">Comment</button>
-                            </div>
-                        </form>
 
                         <!-- いいね・コメント・お気に入り閲覧 -->
                         <div class="d-flex">
-    <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary link-hover">
-        <p style="font-size: 20px;">Likes: {{ $post->likes->count() }}</p>
-    </a>
-    <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary link-hover">
-        <p style="font-size: 20px;">Comments: {{ $post->comments->count() }}</p>
-    </a>
-    <a href="{{ route('posts.show', $post) }}" class="text-decoration-none text-secondary link-hover">
-        <p style="font-size: 20px;">Favorites: {{ $post->favorites->count() }}</p>
-    </a>
-</div>
+                            <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary link-hover">
+                                <p style="font-size: 20px;">いいね: {{ $post->likes->count() }}</p>
+                            </a>
+                            <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary link-hover">
+                                <p style="font-size: 20px;">コメント: {{ $post->comments->count() }}</p>
+                            </a>
+                            <a href="{{ route('posts.show', $post) }}" class="text-decoration-none text-secondary link-hover">
+                                <p style="font-size: 20px;">お気に入り: {{ $post->favorites->count() }}</p>
+                            </a>
+                        </div>
 
                         <!-- いいね機能 -->
                         <div class="d-flex">
@@ -103,6 +95,11 @@
                                 </form>
                             @endif
 
+                            <!-- コメントアイコン -->
+                            <button type="button" class="btn btn-link text-muted" id="comment-toggle-{{ $post->id }}">
+                                <i class="far fa-comment"></i>
+                            </button>
+
                             <!-- お気に入り機能 -->
                             <form method="POST" action="{{ $post->isFavoritedBy(auth()->user()) ? route('posts.unfavorite', $post) : route('posts.favorite', $post) }}" style="display: inline;">
                                 @csrf
@@ -119,6 +116,17 @@
                             </form>
                         </div>
 
+                        <!-- コメント欄 -->
+                        <div id="comment-container-{{ $post->id }}" style="display: none; margin-top: 10px;">
+                            <form method="POST" action="{{ route('comments.store', $post) }}">
+                                @csrf
+                                <div class="input-group mb-3">
+                                    <textarea name="body" class="form-control" rows="3" required></textarea>
+                                    <button type="submit" class="btn btn-primary">Comment</button>
+                                </div>
+                            </form>
+                        </div>
+
                         <!-- カテゴリー表示 -->
                         <div class="ml-auto" style="text-align: right; margin-right:10px;  margin-bottom:10px;font-weight: bolder;">
                             @if ($post->category)
@@ -132,7 +140,7 @@
                             <!-- 自分の投稿のみ編集 -->
                             @if ($post->user_id === auth()->user()->id)
                                 <div style="margin-right: 10px;">
-                                    <a href="{{ route('posts.edit', $post) }}" class="btn btn-primary">Edit Post</a>
+                                    <a href="{{ route('posts.edit', $post) }}" class="btn btn-primary">編集</a>
                                 </div>
                             @endif
 
@@ -142,7 +150,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <div style="margin-right: 10px;">
-                                        <button type="submit" class="btn btn-danger" onclick="confirmDelete(event)">Delete Post</button>
+                                        <button type="submit" class="btn btn-danger" onclick="confirmDelete(event)">削除</button>
                                     </div>
                                 </form>
                             @endif
@@ -150,8 +158,8 @@
                     </div>
                 </div>
 
-                <!-- 削除前の確認 -->
                 <script>
+                    // 削除前の確認
                     function confirmDelete(event) {
                         event.preventDefault(); // フォームのデフォルトの送信をキャンセル
 
@@ -159,10 +167,16 @@
                             document.getElementById('delete-form').submit(); // 確認ダイアログで「OK」が選択された場合はフォームを送信
                         }
                     }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // コメントアイコンのクリックイベントを設定
+                        document.getElementById('comment-toggle-{{ $post->id }}').addEventListener('click', function() {
+                            // コメント欄の表示・非表示を切り替え
+                            var commentContainer = document.getElementById('comment-container-{{ $post->id }}');
+                            commentContainer.style.display = commentContainer.style.display === 'none' ? 'block' : 'none';
+                        });
+                    });
                 </script>
-<style>.link-hover {
-  color: red;
-}</style>
             @endforeach
         </div>
     </div>

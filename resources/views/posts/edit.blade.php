@@ -20,7 +20,15 @@
                 <option value="private" {{ $post->visibility === 'private' ? 'selected' : '' }}>Private</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary"  style="margin:20px; 0 0 0;">Update Post</button>
+        <div class="card-body">
+            <label for="category" class="form-label" style="font-size: 30px;">Category</label>
+            <select class="form-control" id="category" name="category">
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ $post->category_id === $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary"  style="margin-top: 20px;">Update Post</button>
     </form>
 </div>
 @endsection

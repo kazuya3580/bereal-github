@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <!-- 投稿作成ページへのリンクを追加 -->
-        <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">Let's Out Put</a>
+        <a href="{{ route('posts.create') }}" class="btn btn-primary mb-4">Top</a>
         <form method="POST" action="{{ route('profile.update') }}">
             @csrf
             @method('PUT')
@@ -15,14 +15,14 @@
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
             </div>
-            <button type="submit" class="btn btn-primary">Update Profile</button>
+            <button type="submit" class="btn btn-primary">編集</button>
         </form>
 
         <!-- 退会処理 -->
         <form  id="delete-form" action="{{ route('profile.destroy') }}" method="POST" style="margin-top: 10px;">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger">Delete Account</button>
+            <button type="submit" class="btn btn-danger">退会</button>
         </form>
 
         <!-- 自分の投稿 -->
@@ -33,13 +33,23 @@
                 <h3>{{ $post->title }}</h3>
                 <p>{{ $post->body }}</p>
                 <p>{{ $post->created_at->format('Y年m月d日 H時i分') }}</p>
-                <a href="{{ route('posts.show', $post) }}"><p style="font-size: 20px;">Likes: {{ $post->likes->count() }}</p></a>
-                <a href="{{ route('posts.show', $post) }}"><p style="font-size: 20px;">Comments: {{ $post->comments->count() }}</p></a>
+                <!-- いいね・コメント・お気に入り閲覧 -->
+                <div class="d-flex">
+                            <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary link-hover">
+                                <p style="font-size: 20px;">いいね: {{ $post->likes->count() }}</p>
+                            </a>
+                            <a href="{{ route('posts.show', $post) }}" class="me-3 text-decoration-none text-secondary link-hover">
+                                <p style="font-size: 20px;">コメント: {{ $post->comments->count() }}</p>
+                            </a>
+                            <a href="{{ route('posts.show', $post) }}" class="text-decoration-none text-secondary link-hover">
+                                <p style="font-size: 20px;">お気に入り: {{ $post->favorites->count() }}</p>
+                            </a>
+                        </div>
                 <form action="{{ route('posts.destroy', $post) }}" method="POST">
                 @csrf
                 @method('DELETE')
                     <div style="text-align: right; margin:0 10px 10px 0;">
-                        <button type="submit" class="btn btn-danger">Delete Post</button>
+                        <button type="submit" class="btn btn-danger">削除</button>
                     </div>
                 </form>
             @endforeach
